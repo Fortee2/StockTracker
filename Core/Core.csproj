@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Calculations\" />
+    <None Remove="Calculations\Response\" />
+    <None Remove="Calculations\Exceptions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Calculations\" />
+    <Folder Include="Calculations\Response\" />
+    <Folder Include="Calculations\Exceptions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+</Project>
