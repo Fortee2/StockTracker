@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Domain
+namespace StockTracker.Core.Domain
 {
     public class Stock
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Domain
+namespace StockTracker.Core.Domain
 {
     public class RSI:BaseObject
     {

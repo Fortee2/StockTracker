@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.Calculations;
-using Domain;
+using StockTracker.Core.Calculations;
+using StockTracker.Core.Domain;
 using NUnit.Framework;
 
-namespace CoreTests
+namespace StockTracker.CoreTests
 {
     public class RSITests
     {

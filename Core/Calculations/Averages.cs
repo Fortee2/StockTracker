@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Domain;
-using Core.Calculations.Response;
-using Domain.Interfaces;
+using StockTracker.Core.Calculations.Response;
+using StockTracker.Core.Domain.Interfaces;
 
-namespace Core.Calculations
+namespace StockTracker.Core.Calculations
 {
     public class Averages
     {

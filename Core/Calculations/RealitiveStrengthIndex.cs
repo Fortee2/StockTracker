@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Domain;
-using Domain.Interfaces;
+using StockTracker.Core.Domain;
+using StockTracker.Core.Domain.Interfaces;
 
-namespace Core.Calculations
+namespace StockTracker.Core.Calculations
 {
     public class RealitiveStrengthIndex
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Domain.Interfaces
+namespace StockTracker.Core.Domain.Interfaces
 {
     public interface ITradingStructure
     {

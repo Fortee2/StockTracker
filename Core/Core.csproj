@@ -2,19 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>StockTracker.Core</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Calculations\" />
     <None Remove="Calculations\Response\" />
     <None Remove="Calculations\Exceptions\" />
+    <None Remove="Domain\" />
+    <None Remove="Domain\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Calculations\" />
     <Folder Include="Calculations\Response\" />
     <Folder Include="Calculations\Exceptions\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <Folder Include="Domain\" />
+    <Folder Include="Domain\Interfaces\" />
   </ItemGroup>
 </Project>

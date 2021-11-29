@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using Domain.Interfaces;
+using StockTracker.Core.Domain.Interfaces;
 
-namespace Domain
+namespace StockTracker.Core.Domain
 {
     public abstract class BaseObject:ITradingStructure
     {

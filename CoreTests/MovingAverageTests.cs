@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Domain;
-using Core.Calculations;
+using StockTracker.Core.Domain;
+using StockTracker.Core.Calculations;
 using NUnit.Framework;
-using Core.Calculations.Response;
-using Domain.Interfaces;
+using StockTracker.Core.Calculations.Response;
+using StockTracker.Core.Domain.Interfaces;
 
-namespace CoreTests
+namespace StockTracker.CoreTests
 {
     public class MovingAverageTests
     {

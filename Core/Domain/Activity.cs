@@ -1,7 +1,6 @@
 ﻿using System;
-using Domain.Interfaces;
 
-namespace Domain
+namespace StockTracker.Core.Domain
 {
     public class Activity:BaseObject
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Core.Calculations.Response
+namespace StockTracker.Core.Calculations.Response
 {
     public class AverageResponse
     {
