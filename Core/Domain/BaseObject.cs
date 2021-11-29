@@ -36,8 +36,8 @@ namespace StockTracker.Core.Domain
         /// Gets the value of a numeric property based on the property's name
         /// </summary>
         /// <param name="PropertyName">Name of the property</param>
-        /// <returns>An object repersenting the value of the property or null if the property is not found</returns>
-        public float GetFloatValue(String PropertyName)
+        /// <returns>An object repersenting the value of the property.  0 if the property is not found or cast fails.</returns>
+        public float GetFloatValue(string PropertyName)
         {
             try
             {
