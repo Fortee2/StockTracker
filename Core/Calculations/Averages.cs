@@ -5,10 +5,17 @@ using StockTracker.Core.Domain.Interfaces;
 
 namespace StockTracker.Core.Calculations
 {
+    /// <summary>
+    /// Takes an array of Trading Structures and creates different types of averages from the data
+    /// </summary>
     public class Averages
     {
         private readonly IList<ITradingStructure> activities;
 
+        /// <summary>
+        /// Intialize Object
+        /// </summary>
+        /// <param name="collection">The data to average</param>
         public Averages(IList<ITradingStructure> collection)
         {
             this.activities = collection;
@@ -118,6 +125,12 @@ namespace StockTracker.Core.Calculations
             //Add the current value to the next value in sequence
             return currentValue + Sum(start + 1, stop, columnName);
           
+        }
+
+        public static float CalculateEMA(float currentValue, float lastEma, float smoothingWeight)
+        {
+            //Create the weighted Average
+            return (smoothingWeight * currentValue) + (lastEma * (1 - smoothingWeight));
         }
 
         /// <summary>

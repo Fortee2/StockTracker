@@ -13,15 +13,15 @@
     <None Remove="Calculations\Response\" />
     <None Remove="Calculations\Exceptions\" />
     <None Remove="Domain\" />
-    <None Remove="Domain\Interfaces\" />
     <None Remove="Interfaces\" />
+    <None Remove="Interfaces\Calculations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Calculations\" />
     <Folder Include="Calculations\Response\" />
     <Folder Include="Calculations\Exceptions\" />
     <Folder Include="Domain\" />
-    <Folder Include="Domain\Interfaces\" />
     <Folder Include="Interfaces\" />
+    <Folder Include="Interfaces\Calculations\" />
   </ItemGroup>
 </Project>
