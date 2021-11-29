@@ -68,3 +68,6 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1.9.0
