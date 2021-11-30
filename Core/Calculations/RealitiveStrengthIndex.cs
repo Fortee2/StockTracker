@@ -55,8 +55,6 @@ namespace StockTracker.Core.Calculations
                 {
                     float gl = (float)Math.Round(rSI.Close - dataList[i - 1].Close, 2);
 
-
-
                     //Negative number signals loss
                     if (gl < 0)
                     {
@@ -89,7 +87,9 @@ namespace StockTracker.Core.Calculations
 
                     //Since we don't have any previous data we start with a simple Average
                     Averages averages = new (ConvertArrayForAvg());
-                    i = 13;  //Advance to the correct place in the array
+                    //Advance to the correct place in the array
+                    //This is placing the average for the first 14 days in the 15 position
+                    i = 14; 
                     dataList[i].AvgGain = (float)Math.Round(averages.CalculateSimpleAverage(14, "Gain"),2);
                     dataList[i].AvgLoss = (float)Math.Round(averages.CalculateSimpleAverage(14, "Loss"),2);
 

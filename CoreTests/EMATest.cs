@@ -45,7 +45,6 @@ namespace StockTracker.CoreTests
                 )
             );
 
-
             stockHistory.Add(
                 new Activity(1,
                     new DateTime(2021, 11, 17, 0, 0, 0),
