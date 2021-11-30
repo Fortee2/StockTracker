@@ -34,7 +34,6 @@ namespace StockTracker.Core.Calculations
             if (itemCount < 1) return;
 
             CalculateGainLoss();
-
             CalculateIndex();
         }
 

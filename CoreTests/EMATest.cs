@@ -5,13 +5,14 @@ using StockTracker.Core.Calculations;
 using NUnit.Framework;
 using StockTracker.Core.Calculations.Response;
 using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.CoreTests
 {
     public class ExponetialAverageTests
     {
         private IList<ITradingStructure> stockHistory;
-        private Averages averages;
+        private ExponetialMovingAverage averages;
 
         [SetUp]
         public void Setup() {
@@ -148,11 +149,14 @@ namespace StockTracker.CoreTests
         {
             try
             {
-                List<AverageResponse> responses = (List<AverageResponse>)averages.CalculateExponentialMovingAverage(4, "close", "nan");
+                averages.NumberOfPeriods = 4;
+                averages.ColumnToAvg = "close";
+
+                List<IResponse> responses = averages.Calculate();
 
                 Assert.AreEqual(6, responses.Count);
                 Assert.AreEqual(new DateTime(2021, 11, 19, 0, 0, 0), responses[0].ActivityDate);
-                Assert.AreEqual((float)79.547081, responses[0].Value);
+                Assert.AreEqual((float)79.547081, responses[0].GetFloatValue("Value"));
 
             }
             catch(Exception e )

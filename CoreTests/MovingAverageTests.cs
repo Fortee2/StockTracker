@@ -5,20 +5,21 @@ using StockTracker.Core.Calculations;
 using NUnit.Framework;
 using StockTracker.Core.Calculations.Response;
 using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.CoreTests
 {
     public class MovingAverageTests
     {
         private IList<ITradingStructure> stockHistory;
-        private Averages averages;
+        private MovingAveraage averages;
 
         [SetUp]
         public void Setup() {
 
             //Make up some test data
             stockHistory = new List<ITradingStructure>();
-            Random random = new Random();
+            Random random = new();
 
             for(int i =0;i < 10; i++)
             {
@@ -43,13 +44,16 @@ namespace StockTracker.CoreTests
         {
             try
             {
-                List<AverageResponse> responses = (List<AverageResponse>) averages.CreateMovingAverage(3, "close");
+                averages.ColumnToAvg = "close";
+                averages.NumberOfPeriods = 3;
+
+                List<IResponse> responses = averages.Calculate();
 
                 Assert.AreEqual(7, responses.Count);
                 Assert.AreEqual(DateTime.Now.AddDays(2).Date, responses[0].ActivityDate);
 
                 float avg = (float) Math.Round( (stockHistory[0].GetFloatValue("Close") + stockHistory[1].GetFloatValue("Close") + stockHistory[2].GetFloatValue("Close")) / 3,2);
-                Assert.AreEqual(avg, responses[0].Value);
+                Assert.AreEqual(avg, responses[0].GetFloatValue("Value"));
 
             }
             catch(Exception e )
@@ -63,7 +67,10 @@ namespace StockTracker.CoreTests
         {
             try
             {
-                List<AverageResponse> responses = (List<AverageResponse>)averages.CreateMovingAverage(100, "close");
+                averages.ColumnToAvg = "close";
+                averages.NumberOfPeriods = 100;
+
+                List<IResponse> responses = averages.Calculate();
 
                 Assert.AreEqual(0, responses.Count);
             }

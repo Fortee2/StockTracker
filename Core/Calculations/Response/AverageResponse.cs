@@ -1,7 +1,9 @@
 ﻿using System;
+using StockTracker.Core.Interfaces.Calculations;
+
 namespace StockTracker.Core.Calculations.Response
 {
-    public class AverageResponse
+    public class AverageResponse:BaseResponse
     {
         public AverageResponse()
         {
@@ -14,7 +16,6 @@ namespace StockTracker.Core.Calculations.Response
             Value = value;
         }
 
-        public DateTime ActivityDate { get; set; }
         public float Value { get; set; }
     }
 }
