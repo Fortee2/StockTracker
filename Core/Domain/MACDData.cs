@@ -1,13 +1,23 @@
 ﻿using System;
 namespace StockTracker.Core.Domain
 {
-    public class MacdInput:BaseObject
+    public class MACDData:BaseObject
     {
         private float ema12 = 0;
         private float ema26 = 0;
 
-        public MacdInput():base()
+        public MACDData():base()
         {
+        }
+
+        public MACDData(DateTime date, float closingPrice, float macd, float signal, float ema12, float ema26)
+        {
+            ActivityDate = date;
+            Close = closingPrice;
+            MACD = macd;
+            Signal = signal;
+            Previous12EMA = ema12;
+            Previous26EMA = ema26;
         }
 
         public float Close { get; set; }

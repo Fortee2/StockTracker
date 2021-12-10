@@ -13,7 +13,7 @@ namespace StockTracker.Core.Calculations
     /// </summary>
     public class MACD:Averages
     {
-        private string ema12Column, ema26Column, ema9Column, closingPriceColumn;
+        private string ema12Column, ema26Column, closingPriceColumn;
 
         private List<ITradingStructure> dataList;
 
@@ -28,7 +28,7 @@ namespace StockTracker.Core.Calculations
         {
             //Make sure the data is in the proper order;
             dataList = (from activity in list
-                       orderby activity.ActivityDate
+                       orderby activity.ActivityDate ascending
                        select activity).ToList();
         }
 
@@ -64,8 +64,38 @@ namespace StockTracker.Core.Calculations
 
             PopulateAllEmas();
 
-            //Our starting point is going to be the first postion with a 26 day average
-            return CalculateMACD(FindStartingPostion(0, EMA26Column)); 
+            return CreateResponse();
+        }
+
+        public List<IResponse> CreateResponse()
+        {
+            List<IResponse> responses = new();
+
+            if (activities[0].GetType().Name.Equals("MACDData"))
+            {
+                foreach(ITradingStructure tradingStructure in activities)
+                {
+                    responses.Add(new MacdResponse((MACDData)tradingStructure));
+                }
+
+            }
+            else
+            {
+                foreach(ITradingStructure tradingStructure in activities)
+                {
+                    responses.Add(
+                        new MacdResponse(
+                            tradingStructure.ActivityDate,
+                            tradingStructure.GetFloatValue(MACDColumn),
+                            tradingStructure.GetFloatValue(SignalColumn),
+                            tradingStructure.GetFloatValue(EMA12Column),
+                            tradingStructure.GetFloatValue(EMA26Column)
+                        )
+                    );
+                }
+            }
+
+            return responses;
         }
 
         /// <summary>
@@ -102,25 +132,26 @@ namespace StockTracker.Core.Calculations
                 // Populate the missing EMAs
                 CalculateEMAforMacd(
                     ExponetialMovingAverage.CalculateSmoothingWeight(2, periods),
-                    periods,
                     startingPoint,
+                    activities.Count,
+                    (periods == 9) ? MACDColumn : closingPriceColumn,
                     updateColumn
                 );
             }
         }
 
         /// <summary>
-        /// Calculates EMA based on Closing price for a range of values
+        /// Calculates EMA based on Closing price or MACD for a range of values
         /// </summary>
         /// <param name="smoothingWeight">Weighting Value to apply to prices</param>
-        /// <param name="numberOfPeriods">Number of periods.  Used to create a simple average if EMA has never been calculated.</param>
         /// <param name="start">The postion in the array AFTER the last EMA value or 1 if never calculated.</param>
         /// <param name="stop">The postion in the array to stop calculating EMA.</param>
+        /// <param name="columnToCalculate">The column in the array to calculate the EMA for.  For MACD that is the Closing Price or MACD column</param>
         /// <param name="columnToUpdate">The column in the array to update with the calculated EMA</param>
-        private void CalculateEMAforMacd(float smoothingWeight, int start, int stop, string columnToUpdate)
+        private void CalculateEMAforMacd(float smoothingWeight, int start, int stop,string columnToCalculate ,string columnToUpdate)
         { 
             //We are passed the end
-            if (start > stop) return;
+            if (start == stop) return;
 
             int previous = start - 1;
 
@@ -132,14 +163,14 @@ namespace StockTracker.Core.Calculations
                 columnToUpdate,
                 ExponetialMovingAverage.CalculateEMA
                 (
-                    dataList[start].GetFloatValue(closingPriceColumn),
+                    dataList[start].GetFloatValue(columnToCalculate),
                     ema,
                     smoothingWeight
                 )
             );
 
             //Repeat
-            CalculateEMAforMacd(smoothingWeight, start + 1, stop, columnToUpdate);
+            CalculateEMAforMacd(smoothingWeight, start + 1, stop, columnToCalculate, columnToUpdate);
         }
 
 

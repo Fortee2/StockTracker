@@ -9,7 +9,7 @@ using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.CoreTests
 {
-    public class ExponetialAverageTests
+    public class EMATests
     {
         private IList<ITradingStructure> stockHistory;
         private ExponetialMovingAverage averages;

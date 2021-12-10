@@ -15,7 +15,7 @@ namespace StockTracker.Core.Calculations.Response
             properties = type.GetProperties();
         }
 
-        public DateTime ActivityDate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DateTime ActivityDate { get; set; }
 
         /// <summary>
         /// Gets the value of a numeric property based on the property's name
