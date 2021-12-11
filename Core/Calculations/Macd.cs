@@ -30,6 +30,7 @@ namespace StockTracker.Core.Calculations
             dataList = (from activity in list
                        orderby activity.ActivityDate ascending
                        select activity).ToList();
+    
         }
 
         /// <summary>
@@ -62,7 +63,8 @@ namespace StockTracker.Core.Calculations
             //We need at least 27 periods to calculate our first point
             if (!ArrayValidforAverage(27, ema12Column)) return macdResponses;
 
-            PopulateAllEmas();
+            PopulateClosingPriceEMAs();
+            PopulateSignalEMAs();
 
             return CreateResponse();
         }
@@ -99,16 +101,16 @@ namespace StockTracker.Core.Calculations
         }
 
         /// <summary>
-        /// Calculates missing values for 9, 12, 26 EMAs
+        /// Calculates missing values for 12, 26 EMAs
         /// </summary>
-        private void PopulateAllEmas()
+        private void PopulateClosingPriceEMAs()
         {
             //MACD is auto Calculate when EMA is populated
             //Period 9 is a EMA of MACD
-            foreach (ushort periods in new ushort[] { 12, 26, 9 })
+            foreach (ushort periods in new ushort[] { 12, 26 })
             {
                 //Set the ema column
-                string updateColumn = (periods == 12) ? EMA12Column : (periods == 26) ? ema26Column : SignalColumn;
+                string updateColumn = (periods == 12) ? EMA12Column : ema26Column;
                 // Find the first entry where we have missing values
                 int startingPoint = FindStartingPostion(0, updateColumn);
 
@@ -118,11 +120,11 @@ namespace StockTracker.Core.Calculations
                 //We need to seed the base values
                 if (startingPoint == 0)  
                 {
-                    //For 9 periods This is setting the 10th position with the Average of the first 9 periods (0-8)
+                    //For 12 periods This is setting the 13th position with the Average of the first 12 periods (0-11)
                     dataList[periods].SetFloatValue(updateColumn,
                         CalculateSimpleAverage(
                             periods,
-                            (periods == 9)? MACDColumn: closingPriceColumn
+                            closingPriceColumn
                         )
                     );
 
@@ -134,10 +136,47 @@ namespace StockTracker.Core.Calculations
                     ExponetialMovingAverage.CalculateSmoothingWeight(2, periods),
                     startingPoint,
                     activities.Count,
-                    (periods == 9) ? MACDColumn : closingPriceColumn,
+                    closingPriceColumn,
                     updateColumn
                 );
             }
+        }
+
+        /// <summary>
+        /// Calculates missing values for 9 period MACD EMA (Signal)
+        /// </summary>
+        private void PopulateSignalEMAs()
+        {
+            // Find the first entry where we have missing values
+            int startingPoint = (dataList[0].GetFloatValue(SignalColumn) == 0)? FindPostionWithValue(0, MACDColumn): FindStartingPostion(1,SignalColumn);
+
+            //All EMAs already exist for this period
+            if (startingPoint == -1) return;
+
+            //We need to seed the base values
+            if (startingPoint == 0)
+            {
+                //For 9 periods This is setting the 10th position with the Average of the first 9 periods (0-8)
+                dataList[9].SetFloatValue(SignalColumn,
+                    CalculateSimpleAverage(
+                        9,
+                        MACDColumn,
+                        startingPoint
+                    )
+                );
+
+                startingPoint=10;
+            }
+
+            // Populate the missing EMAs
+            CalculateEMAforMacd(
+                ExponetialMovingAverage.CalculateSmoothingWeight(2, 9),
+                startingPoint,
+                activities.Count,
+                MACDColumn,
+                SignalColumn
+            );
+            
         }
 
         /// <summary>
@@ -187,6 +226,23 @@ namespace StockTracker.Core.Calculations
 
             //This will give us the first row where there are no calculations.  We will resume from here.
             if (dataList[start].GetFloatValue(propertyToCheck) == 0) return start;
+
+            //Keep Looking
+            return FindStartingPostion(start + 1, propertyToCheck);
+        }
+
+        /// <summary>
+        /// Find the index of the first missing value
+        /// </summary>
+        /// <param name="start">The position in the array to start</param>
+        /// <param name="propertyToCheck">The property to check</param>
+        /// <returns>Returns -1 if there are no missing values, otherwise the first postion in the array where no value exists</returns>
+        private int FindPostionWithValue(int start, string propertyToCheck)
+        {
+            if (start == dataList.Count) return -1;  //EMA Has been calculated for all periods
+
+            //This will give us the first row where there are no calculations.  We will resume from here.
+            if (dataList[start].GetFloatValue(propertyToCheck) != 0) return start;
 
             //Keep Looking
             return FindStartingPostion(start + 1, propertyToCheck);

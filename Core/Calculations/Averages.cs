@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using StockTracker.Core.Calculations.Response;
 using StockTracker.Core.Domain.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
+using System.Linq;
 
 namespace StockTracker.Core.Calculations
 {
@@ -19,7 +20,11 @@ namespace StockTracker.Core.Calculations
         /// <param name="collection">The data to average</param>
         public Averages(IList<ITradingStructure> collection)
         {
-            this.activities = collection;
+            //Make sure the data is in the proper order;
+            this.activities = (from activity in collection
+                        orderby activity.ActivityDate ascending
+                        select activity).ToList();
+      
         }
 
 

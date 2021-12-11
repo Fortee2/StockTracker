@@ -90,10 +90,10 @@ namespace StockTracker.CoreTests
             {
                 List<IResponse> responses = averages.Calculate();
 
-                MacdResponse macdResponse = (MacdResponse)responses[0];
+                MacdResponse macdResponse = (MacdResponse)responses[49];
 
                 Assert.AreEqual(Math.Round(macdResponse.MACD, 2), 9.05);
-                Assert.AreEqual(Math.Round(macdResponse.Signal, 2), 9.29);
+                Assert.AreEqual(Math.Round(macdResponse.Signal, 2), 9.31);
                 Assert.AreEqual(Math.Round(macdResponse.Previous12EMA, 2), 335.98);
             }
             catch (Exception e)
