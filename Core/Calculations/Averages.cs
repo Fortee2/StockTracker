@@ -36,14 +36,14 @@ namespace StockTracker.Core.Calculations
         /// <param name="columnToAvg">String that represents the name of the property to calculate the average from</param>
         /// <param name="startPostion">The postion in the array to start.  Needs to be 0 based. Defaults to 0</param>
         /// <returns>Returns the average</returns>
-        public float CalculateSimpleAverage(ushort numberOfPeriods, string columnToAvg, int startPostion = 0)
+        public decimal CalculateSimpleAverage(ushort numberOfPeriods, string columnToAvg, int startPostion = 0)
         {
             if (!ArrayValidforAverage(numberOfPeriods, columnToAvg)) return 0;
 
             //subtract 1 from end to adjust for 0 based array
             int adjustedEnd = startPostion + numberOfPeriods - 1;
 
-            return (float)Math.Round(Sum(startPostion, adjustedEnd, columnToAvg) / numberOfPeriods, 2);
+            return (decimal)Math.Round(Sum(startPostion, adjustedEnd, columnToAvg) / numberOfPeriods, 2);
         }
 
     
@@ -55,9 +55,9 @@ namespace StockTracker.Core.Calculations
         /// <param name="stop">The index in the array to stop adding</param>
         /// <param name="columnName">The property name of the object to add</param>
         /// <returns>The sum of all the numbers in the give range</returns>
-        protected float Sum(int start, int stop, string columnName)
+        protected decimal Sum(int start, int stop, string columnName)
         {
-            float currentValue = (float)activities[start].GetValue(columnName);
+            decimal currentValue = (decimal)activities[start].GetValue(columnName);
 
             //We have hit the end of the list
             if (start == stop) return currentValue;

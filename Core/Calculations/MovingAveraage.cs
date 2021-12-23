@@ -47,7 +47,7 @@ namespace StockTracker.Core.Calculations
                 responses.Add(
                     new AverageResponse(
                         activities[i].ActivityDate,
-                        (float)Math.Round(Sum(i - seed, i, ColumnToAvg) / NumberOfPeriods, 2)
+                        (decimal)Math.Round(Sum(i - seed, i, ColumnToAvg) / NumberOfPeriods, 2)
                      )
                  );
             }

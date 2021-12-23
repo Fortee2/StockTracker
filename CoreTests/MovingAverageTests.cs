@@ -52,8 +52,8 @@ namespace StockTracker.CoreTests
                 Assert.AreEqual(7, responses.Count);
                 Assert.AreEqual(DateTime.Now.AddDays(2).Date, responses[0].ActivityDate);
 
-                float avg = (float) Math.Round( (stockHistory[0].GetFloatValue("Close") + stockHistory[1].GetFloatValue("Close") + stockHistory[2].GetFloatValue("Close")) / 3,2);
-                Assert.AreEqual(avg, responses[0].GetFloatValue("Value"));
+                decimal avg = (decimal) Math.Round( (stockHistory[0].GetDecimalValue("Close") + stockHistory[1].GetDecimalValue("Close") + stockHistory[2].GetDecimalValue("Close")) / 3,2);
+                Assert.AreEqual(avg, responses[0].GetDecimalValue("Value"));
 
             }
             catch(Exception e )
@@ -83,18 +83,18 @@ namespace StockTracker.CoreTests
         [Test]
         public void CheckAverageCal()
         { 
-            float response = averages.CalculateSimpleAverage(3, "open");
+            decimal response = averages.CalculateSimpleAverage(3, "open");
 
-            float avg = (float)Math.Round((stockHistory[0].GetFloatValue("Open") + stockHistory[1].GetFloatValue("Open") + stockHistory[2].GetFloatValue("Open")) / 3, 2);
+            decimal avg = (decimal)Math.Round((stockHistory[0].GetDecimalValue("Open") + stockHistory[1].GetDecimalValue("Open") + stockHistory[2].GetDecimalValue("Open")) / 3, 2);
             Assert.AreEqual(avg, response);
         }
 
         [Test]
         public void CheckAverageWithOffset()
         {
-            float response = averages.CalculateSimpleAverage(3, "open", 2);
+            decimal response = averages.CalculateSimpleAverage(3, "open", 2);
 
-            float avg = (float)Math.Round((stockHistory[2].GetFloatValue("Open") + stockHistory[3].GetFloatValue("Open") + stockHistory[4].GetFloatValue("Open")) / 3, 2);
+            decimal avg = (decimal)Math.Round((stockHistory[2].GetDecimalValue("Open") + stockHistory[3].GetDecimalValue("Open") + stockHistory[4].GetDecimalValue("Open")) / 3, 2);
             Assert.AreEqual(avg, response);
         }
 

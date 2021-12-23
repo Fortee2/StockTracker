@@ -16,7 +16,7 @@ namespace StockTracker.Core.Calculations.Response
             Previous26EMA = calculatedData.Previous26EMA;
         }
 
-        public MacdResponse(DateTime date, float MACDValue, float SignalValue, float EMA12Value, float EMA26Value )
+        public MacdResponse(DateTime date, decimal MACDValue, decimal SignalValue, decimal EMA12Value, decimal EMA26Value )
         {
             ActivityDate = date;
             MACD = MACDValue;
@@ -30,10 +30,10 @@ namespace StockTracker.Core.Calculations.Response
 
         }
 
-        public float MACD { get; set; }
-        public float Signal { get; set; }
-        public float Previous12EMA { get; set; }
-        public float Previous26EMA { get; set; }
+        public decimal MACD { get; set; }
+        public decimal Signal { get; set; }
+        public decimal Previous12EMA { get; set; }
+        public decimal Previous26EMA { get; set; }
 
     }
 }

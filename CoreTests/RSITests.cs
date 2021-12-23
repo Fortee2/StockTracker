@@ -41,7 +41,7 @@ namespace StockTracker.CoreTests
         [Test]
         public void TestGainLoss()
         {
-            float gl = rsiList[3].Close - rsiList[2].Close;
+            decimal gl = rsiList[3].Close - rsiList[2].Close;
 
             if(gl == 0)
             {
@@ -51,7 +51,7 @@ namespace StockTracker.CoreTests
 
             if (gl < 0) 
             {
-                Assert.AreEqual((float)Math.Abs(gl), rsiList[3].Loss);
+                Assert.AreEqual((decimal)Math.Abs(gl), rsiList[3].Loss);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace StockTracker.CoreTests
         [Test]
         public void TestAverageGains()
         {
-            float avgGain = (float)Math.Round(((rsiList[14].AvgGain * 13) + rsiList[15].Gain) / 14 , 2);
+            decimal avgGain = (decimal)Math.Round(((rsiList[14].AvgGain * 13) + rsiList[15].Gain) / 14 , 2);
 
             Assert.AreEqual(avgGain, rsiList[15].AvgGain);
         }
@@ -70,7 +70,7 @@ namespace StockTracker.CoreTests
         [Test]
         public void TestAverageLoss()
         {
-            float avgLoss = (float)Math.Round(((rsiList[14].AvgLoss * 13) + rsiList[15].Loss) / 14, 2);
+            decimal avgLoss = (decimal)Math.Round(((rsiList[14].AvgLoss * 13) + rsiList[15].Loss) / 14, 2);
 
             Assert.AreEqual(avgLoss, rsiList[15].AvgLoss);
         }

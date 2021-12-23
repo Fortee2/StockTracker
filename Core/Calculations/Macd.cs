@@ -88,10 +88,10 @@ namespace StockTracker.Core.Calculations
                     responses.Add(
                         new MacdResponse(
                             tradingStructure.ActivityDate,
-                            tradingStructure.GetFloatValue(MACDColumn),
-                            tradingStructure.GetFloatValue(SignalColumn),
-                            tradingStructure.GetFloatValue(EMA12Column),
-                            tradingStructure.GetFloatValue(EMA26Column)
+                            tradingStructure.GetDecimalValue(MACDColumn),
+                            tradingStructure.GetDecimalValue(SignalColumn),
+                            tradingStructure.GetDecimalValue(EMA12Column),
+                            tradingStructure.GetDecimalValue(EMA26Column)
                         )
                     );
                 }
@@ -121,7 +121,7 @@ namespace StockTracker.Core.Calculations
                 if (startingPoint == 0)  
                 {
                     //For 12 periods This is setting the 13th position with the Average of the first 12 periods (0-11)
-                    dataList[periods].SetFloatValue(updateColumn,
+                    dataList[periods].SetDecimalValue(updateColumn,
                         CalculateSimpleAverage(
                             periods,
                             closingPriceColumn
@@ -148,7 +148,7 @@ namespace StockTracker.Core.Calculations
         private void PopulateSignalEMAs()
         {
             // Find the first entry where we have missing values
-            int startingPoint = (dataList[0].GetFloatValue(SignalColumn) == 0)? FindPostionWithValue(0, MACDColumn): FindStartingPostion(1,SignalColumn);
+            int startingPoint = (dataList[0].GetDecimalValue(SignalColumn) == 0)? FindPostionWithValue(0, MACDColumn): FindStartingPostion(1,SignalColumn);
 
             //All EMAs already exist for this period
             if (startingPoint == -1) return;
@@ -157,7 +157,7 @@ namespace StockTracker.Core.Calculations
             if (startingPoint == 0)
             {
                 //For 9 periods This is setting the 10th position with the Average of the first 9 periods (0-8)
-                dataList[9].SetFloatValue(SignalColumn,
+                dataList[9].SetDecimalValue(SignalColumn,
                     CalculateSimpleAverage(
                         9,
                         MACDColumn,
@@ -166,7 +166,7 @@ namespace StockTracker.Core.Calculations
                 );
 
                 startingPoint=10;
-            }
+            }   
 
             // Populate the missing EMAs
             CalculateEMAforMacd(
@@ -187,7 +187,7 @@ namespace StockTracker.Core.Calculations
         /// <param name="stop">The postion in the array to stop calculating EMA.</param>
         /// <param name="columnToCalculate">The column in the array to calculate the EMA for.  For MACD that is the Closing Price or MACD column</param>
         /// <param name="columnToUpdate">The column in the array to update with the calculated EMA</param>
-        private void CalculateEMAforMacd(float smoothingWeight, int start, int stop,string columnToCalculate ,string columnToUpdate)
+        private void CalculateEMAforMacd(decimal smoothingWeight, int start, int stop,string columnToCalculate ,string columnToUpdate)
         { 
             //We are passed the end
             if (start == stop) return;
@@ -195,14 +195,14 @@ namespace StockTracker.Core.Calculations
             int previous = start - 1;
 
             //Prime the pump with the previous value
-            float ema = dataList[previous].GetFloatValue(columnToUpdate); 
+            decimal ema = dataList[previous].GetDecimalValue(columnToUpdate); 
 
             //Calculate EMA
-            dataList[start].SetFloatValue(
+            dataList[start].SetDecimalValue(
                 columnToUpdate,
                 ExponetialMovingAverage.CalculateEMA
                 (
-                    dataList[start].GetFloatValue(columnToCalculate),
+                    dataList[start].GetDecimalValue(columnToCalculate),
                     ema,
                     smoothingWeight
                 )
@@ -225,7 +225,7 @@ namespace StockTracker.Core.Calculations
             if (start == dataList.Count) return -1;  //EMA Has been calculated for all periods
 
             //This will give us the first row where there are no calculations.  We will resume from here.
-            if (dataList[start].GetFloatValue(propertyToCheck) == 0) return start;
+            if (dataList[start].GetDecimalValue(propertyToCheck) == 0) return start;
 
             //Keep Looking
             return FindStartingPostion(start + 1, propertyToCheck);
@@ -242,7 +242,7 @@ namespace StockTracker.Core.Calculations
             if (start == dataList.Count) return -1;  //EMA Has been calculated for all periods
 
             //This will give us the first row where there are no calculations.  We will resume from here.
-            if (dataList[start].GetFloatValue(propertyToCheck) != 0) return start;
+            if (dataList[start].GetDecimalValue(propertyToCheck) != 0) return start;
 
             //Keep Looking
             return FindStartingPostion(start + 1, propertyToCheck);

@@ -53,7 +53,7 @@ namespace StockTracker.Core.Calculations
                 //flat
                 if (rSI.Gain == 0 && rSI.Loss == 0)
                 {
-                    float gl = (float)Math.Round(rSI.Close - dataList[i - 1].Close, 2);
+                    decimal gl = (decimal)Math.Round(rSI.Close - dataList[i - 1].Close, 2);
 
                     //Negative number signals loss
                     if (gl < 0)
@@ -90,8 +90,8 @@ namespace StockTracker.Core.Calculations
                     //Advance to the correct place in the array
                     //This is placing the average for the first 14 days in the 15 position
                     i = 14; 
-                    dataList[i].AvgGain = (float)Math.Round(averages.CalculateSimpleAverage(14, "Gain"),2);
-                    dataList[i].AvgLoss = (float)Math.Round(averages.CalculateSimpleAverage(14, "Loss"),2);
+                    dataList[i].AvgGain = (decimal)Math.Round(averages.CalculateSimpleAverage(14, "Gain"),2);
+                    dataList[i].AvgLoss = (decimal)Math.Round(averages.CalculateSimpleAverage(14, "Loss"),2);
 
                     continue;
                 }
@@ -103,17 +103,17 @@ namespace StockTracker.Core.Calculations
             }
         }
 
-        private float CalulateWeightedAverage(string AvgColumnName, string ColumnName, int postion)
+        private decimal CalulateWeightedAverage(string AvgColumnName, string ColumnName, int postion)
         {
-            return (float)Math.Round((((dataList[postion - 1].GetFloatValue(AvgColumnName) * 13) + dataList[postion].GetFloatValue(ColumnName)) / 14),2);
+            return (decimal)Math.Round((((dataList[postion - 1].GetDecimalValue(AvgColumnName) * 13) + dataList[postion].GetDecimalValue(ColumnName)) / 14),2);
         }
 
-        private float CalculateRsi(int idx)
+        private decimal CalculateRsi(int idx)
         {
-            float rs = dataList[idx].AvgGain / dataList[idx].AvgLoss;
+            decimal rs = dataList[idx].AvgGain / dataList[idx].AvgLoss;
 
             //Convert Relative Strength into a number between 0 and 100
-            return (float) Math.Round(100 - (100 / (rs + 1)), 0);
+            return (decimal) Math.Round(100 - (100 / (rs + 1)), 0);
         }
 
         private List<ITradingStructure> ConvertArrayForAvg()

@@ -51,8 +51,8 @@ namespace StockTracker.Core.Calculations
             List<IResponse> responses = new();
 
             int startPos = StartPosition;
-            float smoothingWeight = CalculateSmoothingWeight(SmoothingFactor, NumberOfPeriods);
-            float prevEma = activities[startPos].GetFloatValue(ColumnPreviousEma);
+            decimal smoothingWeight = CalculateSmoothingWeight(SmoothingFactor, NumberOfPeriods);
+            decimal prevEma = activities[startPos].GetDecimalValue(ColumnPreviousEma);
 
             //never been calculated before
             if (prevEma == 0)
@@ -76,15 +76,15 @@ namespace StockTracker.Core.Calculations
         /// <param name="lastEma"></param>
         /// <param name="smoothingWeight"></param>
         /// <returns></returns>
-        public static float CalculateEMA(float currentValue, float lastEma, float smoothingWeight)
+        public static decimal CalculateEMA(decimal currentValue, decimal lastEma, decimal smoothingWeight)
         {
             //Create the weighted Average
             return (smoothingWeight * currentValue) + (lastEma * (1 - smoothingWeight));
         }
 
-        public static float CalculateSmoothingWeight(int smoothingFactor, ushort periods)
+        public static decimal CalculateSmoothingWeight(int smoothingFactor, ushort periods)
         {
-            return smoothingFactor / (float)(periods + 1);
+            return smoothingFactor / (decimal)(periods + 1);
         }
 
         /// <summary>
@@ -96,14 +96,14 @@ namespace StockTracker.Core.Calculations
         /// <param name="lastEma">The weighted average from the previous calculation</param>
         /// <param name="smoothingWeight">A weight to be applied in the average calculation</param>
         /// <returns></returns>
-        private List<IResponse> CalculateEMA(int start, int end, string columnToAverage, float lastEma, float smoothingWeight)
+        private List<IResponse> CalculateEMA(int start, int end, string columnToAverage, decimal lastEma, decimal smoothingWeight)
         {
             List<IResponse> responses = new();
 
             if (start > end) return responses; //We heave passed the end time to stop;
 
             //Create the weighted Average
-            float ema = CalculateEMA(activities[start].GetFloatValue(columnToAverage), lastEma, smoothingWeight); 
+            decimal ema = CalculateEMA(activities[start].GetDecimalValue(columnToAverage), lastEma, smoothingWeight); 
             responses.Add(new AverageResponse(activities[start].ActivityDate, ema));
 
             //Move to the next position
