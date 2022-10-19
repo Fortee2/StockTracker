@@ -27,7 +27,7 @@ namespace StockTracker.Core.Calculations
       
         }
 
-
+        
 
         /// <summary>
         /// Calculates an average for a set of numbers
