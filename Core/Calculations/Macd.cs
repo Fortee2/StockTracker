@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using StockTracker.Core.Calculations.Response;
 using StockTracker.Core.Domain;
-using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
 using System.Linq;
 

@@ -4,7 +4,7 @@ using StockTracker.Core.Domain;
 using StockTracker.Core.Calculations;
 using NUnit.Framework;
 using StockTracker.Core.Calculations.Response;
-using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.CoreTests
@@ -12,6 +12,8 @@ namespace StockTracker.CoreTests
     public class EMATests
     {
         private IList<ITradingStructure> stockHistory;
+        private IList<ITradingStructure> emaList;
+
         private ExponetialMovingAverage averages;
 
         [SetUp]
@@ -19,126 +21,11 @@ namespace StockTracker.CoreTests
 
             //Make up some test data
             stockHistory = new List<ITradingStructure>();
-            Random random = new Random();
+            emaList = new List<ITradingStructure>();
 
+            AddStockHistory();
+            AddEMAHistory();
 
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021,11,15,0,0,0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)77.2107,
-                    111000
-                )
-            );
-
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 16, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)77.6964,
-                    111000
-                )
-            );
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 17, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)78.8296,
-                    111000
-                )
-            );
-
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 18, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)80.1437,
-                    111000
-                )
-            );
-
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 19, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)81.1627,
-                    111000
-                )
-            );
-
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 20, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)81.4959,
-                    111000
-                )
-            );
-
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 21, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)81.2769,
-                    111000
-                )
-            );
-
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 22, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)80.6464,
-                    111000
-                )
-            );
-
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 23, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)82.7053,
-                    111000
-                )
-            );
-
-
-            stockHistory.Add(
-                new Activity(1,
-                    new DateTime(2021, 11, 24, 0, 0, 0),
-                    (decimal)80.4008,
-                    (decimal)76.8488,
-                    (decimal)80.3913,
-                    (decimal)82.2578,
-                    111000
-                )
-            );
             //Intialize our test class
             averages = new(stockHistory);
         }
@@ -162,6 +49,170 @@ namespace StockTracker.CoreTests
             { 
                 Assert.Fail(e.Message);
             }
+        }
+
+        [Test]
+        public void CheckExponetialMovingkAverageWithHistory()
+        {
+            try
+            {
+                averages = new ExponetialMovingAverage(emaList);
+                averages.NumberOfPeriods = 4;
+                averages.ColumnPreviousEma = "PrevEMA";
+                averages.ColumnToAvg = "CalculateValue";
+
+                List<IResponse> responses = averages.Calculate();
+
+                Assert.AreEqual(6, responses.Count);
+                Assert.AreEqual(new DateTime(2021, 11, 19, 0, 0, 0), responses[0].ActivityDate);
+                Assert.AreEqual((decimal)79.55, Math.Round(responses[0].GetDecimalValue("Value"), 2));
+
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+
+        public void AddStockHistory()
+        {
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 15, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)77.2107,
+                    111000
+                )
+            );
+
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 16, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)77.6964,
+                    111000
+                )
+            );
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 17, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)78.8296,
+                    111000
+                )
+            );
+
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 18, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)80.1437,
+                    111000
+                )
+            );
+
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 19, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)81.1627,
+                    111000
+                )
+            );
+
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 20, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)81.4959,
+                    111000
+                )
+            );
+
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 21, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)81.2769,
+                    111000
+                )
+            );
+
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 22, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)80.6464,
+                    111000
+                )
+            );
+
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 23, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)82.7053,
+                    111000
+                )
+            );
+
+
+            stockHistory.Add(
+                new Quote(1,
+                    new DateTime(2021, 11, 24, 0, 0, 0),
+                    (decimal)80.4008,
+                    (decimal)76.8488,
+                    (decimal)80.3913,
+                    (decimal)82.2578,
+                    111000
+                )
+            );
+        }
+
+        public void AddEMAHistory()
+        {
+            emaList.Add(new EMAData(0, new DateTime(2017, 12, 20), (decimal)38.728, (decimal)38.19));
+            emaList.Add(new EMAData(0, new DateTime(2017, 12, 21), (decimal)0, (decimal)38.4001));
+            emaList.Add(new EMAData(0, new DateTime(2017, 12, 22), (decimal)0, (decimal)38.2726));
+            emaList.Add(new EMAData(0, new DateTime(2017, 12, 26), (decimal)0, (decimal)38.0722));
+            emaList.Add(new EMAData(0, new DateTime(2017, 12, 27), (decimal)0, (decimal)37.6259));
+            emaList.Add(new EMAData(0, new DateTime(2017, 12, 28), (decimal)0, (decimal)37.6897));
+            emaList.Add(new EMAData(0, new DateTime(2017, 12, 29), (decimal)0, (decimal)37.3344));
+            emaList.Add(new EMAData(0, new DateTime(2018, 1, 2), (decimal)0, (decimal)38.0722));
+            emaList.Add(new EMAData(0, new DateTime(2018, 1, 3), (decimal)0, (decimal)39.0012));
+            emaList.Add(new EMAData(0, new DateTime(2018, 1, 4), (decimal)0, (decimal)40.2035));
+            emaList.Add(new EMAData(0, new DateTime(2018, 1, 5), (decimal)0, (decimal)40.0851));
+            emaList.Add(new EMAData(0, new DateTime(2018, 1, 8), (decimal)0, (decimal)40.2764));
+            emaList.Add(new EMAData(0, new DateTime(2018, 1, 9), (decimal)0, (decimal)40.1215));
+            emaList.Add(new EMAData(0, new DateTime(2018, 1, 10), (decimal)0, (decimal)39.1652));
+            emaList.Add(new EMAData(0, new DateTime(2018, 1, 11), (decimal)0, (decimal)40.2491));
         }
 
     }

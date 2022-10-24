@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using StockTracker.Core.Domain;
-using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces;
 
 namespace StockTracker.Core.Calculations
 {

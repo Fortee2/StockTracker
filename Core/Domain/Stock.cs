@@ -9,6 +9,6 @@ namespace StockTracker.Core.Domain
         public string CompnayName { get; set; }
         public string Ticker { get; set; }
 
-        ICollection<Activity> History { get; set; }
+        ICollection<EMAData> History { get; set; }
     }
 }

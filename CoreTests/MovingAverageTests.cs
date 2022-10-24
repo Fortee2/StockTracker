@@ -4,7 +4,7 @@ using StockTracker.Core.Domain;
 using StockTracker.Core.Calculations;
 using NUnit.Framework;
 using StockTracker.Core.Calculations.Response;
-using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.CoreTests
@@ -24,7 +24,7 @@ namespace StockTracker.CoreTests
             for(int i =0;i < 10; i++)
             {
                 stockHistory.Add(
-                    new Activity(1,
+                    new Quote(1,
                         DateTime.Now.Date.AddDays(i),
                         random.Next(1,500),
                         random.Next(1, 500),

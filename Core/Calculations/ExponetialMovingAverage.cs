@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StockTracker.Core.Calculations.Response;
-using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.Core.Calculations

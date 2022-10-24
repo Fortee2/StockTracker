@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces;
 
 namespace StockTracker.Core.Domain
 {

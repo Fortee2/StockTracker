@@ -4,7 +4,7 @@ using StockTracker.Core.Domain;
 using StockTracker.Core.Calculations;
 using NUnit.Framework;
 using StockTracker.Core.Calculations.Response;
-using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.CoreTests
