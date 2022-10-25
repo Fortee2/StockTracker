@@ -10,12 +10,12 @@ namespace StockTracker.Core.Calculations.Response
        
         }
 
-        public AverageResponse(DateTime activityDate, float value)
+        public AverageResponse(DateTime activityDate, decimal value)
         {
             ActivityDate = activityDate;
             Value = value;
         }
 
-        public float Value { get; set; }
+        public decimal Value { get; set; }
     }
 }

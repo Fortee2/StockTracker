@@ -3,14 +3,14 @@ namespace StockTracker.Core.Domain
 {
     public class MACDData:BaseObject
     {
-        private float ema12 = 0;
-        private float ema26 = 0;
+        private decimal ema12 = 0;
+        private decimal ema26 = 0;
 
         public MACDData():base()
         {
         }
 
-        public MACDData(DateTime date, float closingPrice, float macd, float signal, float ema12, float ema26)
+        public MACDData(DateTime date, decimal closingPrice, decimal macd, decimal signal, decimal ema12, decimal ema26)
         {
             ActivityDate = date;
             Close = closingPrice;
@@ -20,11 +20,11 @@ namespace StockTracker.Core.Domain
             Previous26EMA = ema26;
         }
 
-        public float Close { get; set; }
-        public float MACD { get; set; }
-        public float Previous12EMA { get { return ema12; } set { ema12 = value; CalculateMACD(); } }
-        public float Previous26EMA { get { return ema26; } set { ema26 = value; CalculateMACD(); } }
-        public float Signal { get; set; }
+        public decimal Close { get; set; }
+        public decimal MACD { get; set; }
+        public decimal Previous12EMA { get { return ema12; } set { ema12 = value; CalculateMACD(); } }
+        public decimal Previous26EMA { get { return ema26; } set { ema26 = value; CalculateMACD(); } }
+        public decimal Signal { get; set; }
 
         private void CalculateMACD()
         {

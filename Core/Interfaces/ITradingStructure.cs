@@ -1,5 +1,5 @@
 ﻿using System;
-namespace StockTracker.Core.Domain.Interfaces
+namespace StockTracker.Core.Interfaces
 {
     public interface ITradingStructure
     {
@@ -9,8 +9,8 @@ namespace StockTracker.Core.Domain.Interfaces
 
         object GetValue(string PropertyName);
 
-        float GetFloatValue(string PropertyName);
-        void SetFloatValue(string propertyName, float value);
+        decimal GetDecimalValue(string PropertyName);
+        void SetDecimalValue(string propertyName, decimal value);
     }
 
 }

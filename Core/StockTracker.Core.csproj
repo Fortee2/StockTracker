@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>StockTracker.Core</RootNamespace>
   </PropertyGroup>
 
@@ -15,6 +15,7 @@
     <None Remove="Domain\" />
     <None Remove="Interfaces\" />
     <None Remove="Interfaces\Calculations\" />
+    <None Remove="Analyzers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Calculations\" />
@@ -23,5 +24,6 @@
     <Folder Include="Domain\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Interfaces\Calculations\" />
+    <Folder Include="Analyzers\" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StockTracker.Core.Calculations.Response;
-using StockTracker.Core.Domain.Interfaces;
+using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.Core.Calculations
@@ -41,18 +41,20 @@ namespace StockTracker.Core.Calculations
             int seed = NumberOfPeriods - 1;
 
             //loop over values calculating a moving average based on interval
-            for (int i = seed; i < activities.Count - 1; i++)
+            for (int i = seed; i < activities.Count; i++)
             {
                 //Create a response object for each moving average
                 responses.Add(
                     new AverageResponse(
                         activities[i].ActivityDate,
-                        (float)Math.Round(Sum(i - seed, i, ColumnToAvg) / NumberOfPeriods, 2)
+                        Math.Round(
+                            Sum(i - seed, i, ColumnToAvg) / NumberOfPeriods, 2)
                      )
                  );
             }
 
             return responses;
         }
+
     }
 }

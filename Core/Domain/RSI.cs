@@ -3,17 +3,17 @@ namespace StockTracker.Core.Domain
 {
     public class RSI:BaseObject
     {
-        public RSI(DateTime ActivityDate, float Close)
+        public RSI(DateTime ActivityDate, decimal Close)
         {
             this.ActivityDate = ActivityDate;
             this.Close = Close;
         }
 
-        public float Close { get; set; }
-        public float Gain { get; set; }
-        public float Loss { get; set; }
-        public float AvgGain { get; set; }
-        public float AvgLoss { get; set; }
-        public float RSIndex { get; set; }
+        public decimal Close { get; set; }
+        public decimal Gain { get; set; }
+        public decimal Loss { get; set; }
+        public decimal AvgGain { get; set; }
+        public decimal AvgLoss { get; set; }
+        public decimal RSIndex { get; set; }
     }
 }

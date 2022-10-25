@@ -22,11 +22,11 @@ namespace StockTracker.Core.Calculations.Response
         /// </summary>
         /// <param name="PropertyName">Name of the property</param>
         /// <returns>An object repersenting the value of the property.  0 if the property is not found or cast fails.</returns>
-        public float GetFloatValue(string PropertyName)
+        public decimal GetDecimalValue(string PropertyName)
         {
             try
             {
-                return (float)GetValue(PropertyName);
+                return (decimal)GetValue(PropertyName);
             }
             catch
             {
@@ -47,11 +47,11 @@ namespace StockTracker.Core.Calculations.Response
         }
 
         /// <summary>
-        /// Sets the value of a Float value property
+        /// Sets the value of a decimal value property
         /// </summary>
         /// <param name="propertyName">The name of the propety to update</param>
         /// <param name="value">The value to assign to the property</param>
-        public void SetFloatValue(string propertyName, float value)
+        public void SetDecimalValue(string propertyName, decimal value)
         {
             SetValue(0, properties.Length - 1, propertyName, value);
         }
