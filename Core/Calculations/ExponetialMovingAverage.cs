@@ -65,6 +65,10 @@ namespace StockTracker.Core.Calculations
                 prevEma = CalculateSimpleAverage(NumberOfPeriods, ColumnToAvg);
                 startPos = NumberOfPeriods; // Move index to correct position in the array   
             }
+            else
+            {
+                startPos = 1;
+            }
 
             return CalculateEMA(startPos, activities.Count - 1, ColumnToAvg, prevEma, smoothingWeight);
         }
