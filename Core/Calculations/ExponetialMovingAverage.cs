@@ -7,8 +7,8 @@ using StockTracker.Core.Interfaces.Calculations;
 namespace StockTracker.Core.Calculations
 {
     public class ExponetialMovingAverage:Averages { 
-        private ushort numberOfPeriods;
-        private string columnToAvg, columnPreviousEma;
+        private ushort _numberOfPeriods;
+        private string _columnToAvg, columnPreviousEma;
         private int startPosition = 0, smoothingFactor = 2;
 
         /// <summary>
@@ -22,11 +22,11 @@ namespace StockTracker.Core.Calculations
         /// <summary>
         /// The number of items to average
         /// </summary>
-        public ushort NumberOfPeriods { get => numberOfPeriods; set => numberOfPeriods = value; }
+        public ushort NumberOfPeriods { get => _numberOfPeriods; set => _numberOfPeriods = value; }
         /// <summary>
         /// String that represents the name of the property to calculate the average from
         /// </summary>
-        public string ColumnToAvg { get => columnToAvg; set => columnToAvg = value; }
+        public string ColumnToAvg { get => _columnToAvg; set => _columnToAvg = value; }
         /// <summary>
         /// String that represents the name of the property to retrieve the previous periods EMA from.
         /// Looks for this value in the previous row.
@@ -51,26 +51,26 @@ namespace StockTracker.Core.Calculations
             List<IResponse> responses = new();
 
             int startPos = StartPosition;
-            decimal smoothingWeight = CalculateSmoothingWeight(SmoothingFactor, NumberOfPeriods);
+            decimal smoothingWeight = CalculateSmoothingWeight(SmoothingFactor, _numberOfPeriods);
             decimal prevEma = activities[startPos].GetDecimalValue(ColumnPreviousEma);
 
             //never been calculated before
             if (prevEma == 0)
             {
                 //Check to see if the array has enough data to calculate an average
-                if (!ArrayValidforAverage(NumberOfPeriods, ColumnToAvg)) return responses;
+                if (!ArrayValidforAverage(_numberOfPeriods, _columnToAvg)) return responses;
 
                 //if no EMA exists calculate a simple average as start
                 //and place it into the prevEma variable for the next calculation
-                prevEma = CalculateSimpleAverage(NumberOfPeriods, ColumnToAvg);
-                startPos = NumberOfPeriods; // Move index to correct position in the array   
+                prevEma = CalculateSimpleAverage(_numberOfPeriods, _columnToAvg);
+                startPos = _numberOfPeriods; // Move index to correct position in the array   
             }
             else
             {
                 startPos = 1;
             }
 
-            return CalculateEMA(startPos, activities.Count - 1, ColumnToAvg, prevEma, smoothingWeight);
+            return CalculateEMA(startPos, activities.Count, _columnToAvg, prevEma, smoothingWeight);
         }
 
         /// <summary>
@@ -103,15 +103,14 @@ namespace StockTracker.Core.Calculations
         private List<IResponse> CalculateEMA(int start, int end, string columnToAverage, decimal lastEma, decimal smoothingWeight)
         {
             List<IResponse> responses = new();
+            decimal holdEma = lastEma;
 
-            if (start > end) return responses; //We heave passed the end time to stop;
-
-            //Create the weighted Average
-            decimal ema = CalculateEMA(activities[start].GetDecimalValue(columnToAverage), lastEma, smoothingWeight); 
-            responses.Add(new AverageResponse(activities[start].ActivityDate, ema));
-
-            //Move to the next position
-            responses.AddRange(CalculateEMA(start + 1, end, columnToAverage, ema, smoothingWeight));
+            for(int i = start; i < end; i++) {
+                //Create the weighted Average
+                decimal ema = CalculateEMA(activities[i].GetDecimalValue(columnToAverage), holdEma, smoothingWeight);
+                holdEma = ema;
+                responses.Add(new AverageResponse(activities[i].ActivityDate, ema));
+            }
 
             return responses;
         }

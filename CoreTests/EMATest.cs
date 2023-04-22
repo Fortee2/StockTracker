@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using StockTracker.Core.Domain;
 using StockTracker.Core.Calculations;
 using NUnit.Framework;
-using StockTracker.Core.Calculations.Response;
 using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
 
@@ -198,21 +197,21 @@ namespace StockTracker.CoreTests
 
         public void AddEMAHistory()
         {
-            emaList.Add(new EMAData(0, new DateTime(2017, 12, 20), (decimal)38.728, (decimal)38.19));
-            emaList.Add(new EMAData(0, new DateTime(2017, 12, 21), (decimal)38.4001, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2017, 12, 22), (decimal)38.2726, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2017, 12, 26), (decimal)38.0722, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2017, 12, 27), (decimal)37.6259, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2017, 12, 28), (decimal)37.6897, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2017, 12, 29), (decimal)37.3344, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2018, 1, 2), (decimal)38.0722, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2018, 1, 3), (decimal)39.0012, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2018, 1, 4), (decimal)40.2035, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2018, 1, 5), (decimal)40.0851, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2018, 1, 8), (decimal)40.2764, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2018, 1, 9), (decimal)40.1215, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2018, 1, 10),(decimal)39.1652, (decimal)0));
-            emaList.Add(new EMAData(0, new DateTime(2018, 1, 11),(decimal)40.2491, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2017, 12, 20), (decimal)38.728, (decimal)38.19));
+            emaList.Add(new MAData(0, new DateTime(2017, 12, 21), (decimal)38.4001, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2017, 12, 22), (decimal)38.2726, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2017, 12, 26), (decimal)38.0722, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2017, 12, 27), (decimal)37.6259, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2017, 12, 28), (decimal)37.6897, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2017, 12, 29), (decimal)37.3344, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2018, 1, 2), (decimal)38.0722, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2018, 1, 3), (decimal)39.0012, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2018, 1, 4), (decimal)40.2035, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2018, 1, 5), (decimal)40.0851, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2018, 1, 8), (decimal)40.2764, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2018, 1, 9), (decimal)40.1215, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2018, 1, 10),(decimal)39.1652, (decimal)0));
+            emaList.Add(new MAData(0, new DateTime(2018, 1, 11),(decimal)40.2491, (decimal)0));
         }
 
     }
