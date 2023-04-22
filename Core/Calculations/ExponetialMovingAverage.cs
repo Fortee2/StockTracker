@@ -107,9 +107,9 @@ namespace StockTracker.Core.Calculations
 
             for(int i = start; i < end; i++) {
                 //Create the weighted Average
-                decimal ema = CalculateEMA(activities[start].GetDecimalValue(columnToAverage), holdEma, smoothingWeight);
+                decimal ema = CalculateEMA(activities[i].GetDecimalValue(columnToAverage), holdEma, smoothingWeight);
                 holdEma = ema;
-                responses.Add(new AverageResponse(activities[start].ActivityDate, ema));
+                responses.Add(new AverageResponse(activities[i].ActivityDate, ema));
             }
 
             return responses;
