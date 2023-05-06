@@ -187,32 +187,26 @@ namespace StockTracker.Core.Calculations
         /// <param name="stop">The postion in the array to stop calculating EMA.</param>
         /// <param name="columnToCalculate">The column in the array to calculate the EMA for.  For MACD that is the Closing Price or MACD column</param>
         /// <param name="columnToUpdate">The column in the array to update with the calculated EMA</param>
-        private void CalculateEMAforMacd(decimal smoothingWeight, int start, int stop,string columnToCalculate ,string columnToUpdate)
-        { 
-            //We are passed the end
-            if (start == stop) return;
-
+        private void CalculateEMAforMacd(decimal smoothingWeight, int start, int stop, string columnToCalculate, string columnToUpdate)
+        {
             int previous = start - 1;
+            decimal ema = dataList[previous].GetDecimalValue(columnToUpdate);
 
-            //Prime the pump with the previous value
-            decimal ema = dataList[previous].GetDecimalValue(columnToUpdate); 
+            for (int i = start; i < stop; i++)
+            {
+                dataList[i].SetDecimalValue(
+                    columnToUpdate,
+                    ExponetialMovingAverage.CalculateEMA
+                    (
+                        dataList[i].GetDecimalValue(columnToCalculate),
+                        ema,
+                        smoothingWeight
+                    )
+                );
 
-            //Calculate EMA
-            dataList[start].SetDecimalValue(
-                columnToUpdate,
-                ExponetialMovingAverage.CalculateEMA
-                (
-                    dataList[start].GetDecimalValue(columnToCalculate),
-                    ema,
-                    smoothingWeight
-                )
-            );
-
-            //Repeat
-            CalculateEMAforMacd(smoothingWeight, start + 1, stop, columnToCalculate, columnToUpdate);
+                ema = dataList[i].GetDecimalValue(columnToUpdate);
+            }
         }
-
-
 
         /// <summary>
         /// Find the index of the first missing value
