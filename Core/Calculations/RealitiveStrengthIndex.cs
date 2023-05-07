@@ -45,12 +45,12 @@ namespace StockTracker.Core.Calculations
         {
             int itemCount = dataList.Count;
 
-            for (int i = 1; i < itemCount - 1; i++)
+            for (int i = 1; i < itemCount; i++)
             {
                 RelativeStrength rSI = dataList[i];
 
                 //If both are zero the entry has never been set or trading was
-                //flat
+                //flata
                 if (rSI.Gain == 0 && rSI.Loss == 0)
                 {
                     decimal gl = (decimal)Math.Round(rSI.Close - dataList[i - 1].Close, 2);
@@ -76,7 +76,7 @@ namespace StockTracker.Core.Calculations
         {
             int itemCount = dataList.Count;
 
-            for (int i = 0; i < itemCount - 1; i++)
+            for (int i = 0; i < itemCount; i++)
             {
                 RelativeStrength rSI = dataList[i];
 
