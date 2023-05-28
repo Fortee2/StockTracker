@@ -9,7 +9,7 @@ namespace StockTracker.CoreTests
 {
     public class RSITests
     {
-        private IList<RSI> rsiList;
+        private IList<RelativeStrength> rsiList;
         private RealitiveStrengthIndex strengthIndex;
 
         public RSITests()
@@ -22,12 +22,12 @@ namespace StockTracker.CoreTests
         {
             Random random = new ();
 
-            rsiList = new List<RSI>();
+            rsiList = new List<RelativeStrength>();
 
             for(short i = 0; i < 20; i++)
             {
                 rsiList.Add(
-                    new RSI(
+                    new RelativeStrength(
                         DateTime.Now.AddDays(i),
                         random.Next(1, 500)
                     )
