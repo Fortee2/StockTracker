@@ -1,9 +1,9 @@
 ﻿using System;
 namespace StockTracker.Core.Domain
 {
-    public class RSI:BaseObject
+    public class RelativeStrength:BaseObject
     {
-        public RSI(DateTime ActivityDate, decimal Close)
+        public RelativeStrength(DateTime ActivityDate, decimal Close)
         {
             this.ActivityDate = ActivityDate;
             this.Close = Close;

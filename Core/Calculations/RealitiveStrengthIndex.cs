@@ -8,7 +8,7 @@ namespace StockTracker.Core.Calculations
 {
     public class RealitiveStrengthIndex
     {
-        protected readonly IList<RSI> dataList;
+        protected readonly IList<RelativeStrength> dataList;
 
         /// <summary>
         /// Creates an instatnce of the RSI caluclation library
@@ -20,7 +20,7 @@ namespace StockTracker.Core.Calculations
         /// </param>
         public RealitiveStrengthIndex(IList rsiData)
         {
-            dataList = (IList<RSI>) rsiData;
+            dataList = (IList<RelativeStrength>) rsiData;
         }
 
         /// <summary>
@@ -45,12 +45,12 @@ namespace StockTracker.Core.Calculations
         {
             int itemCount = dataList.Count;
 
-            for (int i = 1; i < itemCount - 1; i++)
+            for (int i = 1; i < itemCount; i++)
             {
-                RSI rSI = dataList[i];
+                RelativeStrength rSI = dataList[i];
 
                 //If both are zero the entry has never been set or trading was
-                //flat
+                //flata
                 if (rSI.Gain == 0 && rSI.Loss == 0)
                 {
                     decimal gl = (decimal)Math.Round(rSI.Close - dataList[i - 1].Close, 2);
@@ -76,9 +76,9 @@ namespace StockTracker.Core.Calculations
         {
             int itemCount = dataList.Count;
 
-            for (int i = 0; i < itemCount - 1; i++)
+            for (int i = 0; i < itemCount; i++)
             {
-                RSI rSI = dataList[i];
+                RelativeStrength rSI = dataList[i];
 
                 //never been calculated before
                 if(i == 0 && rSI.AvgGain == 0 && rSI.AvgLoss == 0)
@@ -121,7 +121,7 @@ namespace StockTracker.Core.Calculations
             List<ITradingStructure> tradingStructures = new(14);
             short counter = 0;
 
-            foreach(RSI rSI in dataList)
+            foreach(RelativeStrength rSI in dataList)
             {
                 if (counter == 14) break;
 
