@@ -4,18 +4,15 @@ using StockTracker.Core.Calculations.Response;
 using StockTracker.Core.Domain;
 using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
-using System.Linq;
 
 namespace StockTracker.Core.Calculations
 {
     /// <summary>
     /// Class to Calculate Moving Average Convergence Divergence
     /// </summary>
-    public class MACD:Averages
+    public class MACD:BaseCalculator, ICalculate<MacdResponse>
     {
         private string ema12Column, ema26Column, closingPriceColumn;
-
-        private List<ITradingStructure> dataList;
 
         /// <summary>
         /// Intialize the object
@@ -26,10 +23,6 @@ namespace StockTracker.Core.Calculations
         /// <param name="list">An array containing the Closing Price and poperties to store the required EMAs</param>
         public MACD(List<ITradingStructure> list):base(list)
         {
-            //Make sure the data is in the proper order;
-            dataList = (from activity in list
-                       orderby activity.ActivityDate ascending
-                       select activity).ToList();
     
         }
 
@@ -56,9 +49,9 @@ namespace StockTracker.Core.Calculations
         /// Calculates Macd Based on the supplied data
         /// </summary>
         /// <returns>list of MACD Response Objects contain the MACD, Signal, 9 Day EMA, 12 Day EMA, 26 Day EMA</returns>
-        public override List<IResponse> Calculate()
+        public  List<MacdResponse> Calculate()
         {
-            List<IResponse> macdResponses = new();
+            List<MacdResponse> macdResponses = new();
 
             //We need at least 27 periods to calculate our first point
             if (!ArrayValidforAverage(27, ema12Column)) return macdResponses;
@@ -69,9 +62,9 @@ namespace StockTracker.Core.Calculations
             return CreateResponse();
         }
 
-        public List<IResponse> CreateResponse()
+        public List<MacdResponse> CreateResponse()
         {
-            List<IResponse> responses = new();
+            List<MacdResponse> responses = new();
 
             if (activities[0].GetType().Name.Equals("MACDData"))
             {
@@ -121,11 +114,9 @@ namespace StockTracker.Core.Calculations
                 if (startingPoint == 0)  
                 {
                     //For 12 periods This is setting the 13th position with the Average of the first 12 periods (0-11)
-                    dataList[periods].SetDecimalValue(updateColumn,
-                        CalculateSimpleAverage(
-                            periods,
-                            closingPriceColumn
-                        )
+                    Averages averages = new(this.activities, periods, closingPriceColumn);
+                    this.activities[periods].SetDecimalValue(updateColumn,
+                        averages.Calculate()
                     );
 
                     startingPoint = periods + 1;
@@ -148,7 +139,7 @@ namespace StockTracker.Core.Calculations
         private void PopulateSignalEMAs()
         {
             // Find the first entry where we have missing values
-            int startingPoint = (dataList[0].GetDecimalValue(SignalColumn) == 0)? FindPostionWithValue(0, MACDColumn): FindStartingPostion(1,SignalColumn);
+            int startingPoint = (this.activities[0].GetDecimalValue(SignalColumn) == 0)? FindPostionWithValue(0, MACDColumn): FindStartingPostion(1,SignalColumn);
 
             //All EMAs already exist for this period
             if (startingPoint == -1) return;
@@ -157,12 +148,9 @@ namespace StockTracker.Core.Calculations
             if (startingPoint == 0)
             {
                 //For 9 periods This is setting the 10th position with the Average of the first 9 periods (0-8)
-                dataList[9].SetDecimalValue(SignalColumn,
-                    CalculateSimpleAverage(
-                        9,
-                        MACDColumn,
-                        startingPoint
-                    )
+                Averages averages = new(this.activities, 9, MACDColumn, startingPoint);
+                this.activities[9].SetDecimalValue(SignalColumn,
+                    averages.Calculate()
                 );
 
                 startingPoint=10;
@@ -190,21 +178,21 @@ namespace StockTracker.Core.Calculations
         private void CalculateEMAforMacd(decimal smoothingWeight, int start, int stop, string columnToCalculate, string columnToUpdate)
         {
             int previous = start - 1;
-            decimal ema = dataList[previous].GetDecimalValue(columnToUpdate);
+            decimal ema = this.activities[previous].GetDecimalValue(columnToUpdate);
 
             for (int i = start; i < stop; i++)
             {
-                dataList[i].SetDecimalValue(
+                this.activities[i].SetDecimalValue(
                     columnToUpdate,
                     ExponetialMovingAverage.CalculateEMA
                     (
-                        dataList[i].GetDecimalValue(columnToCalculate),
+                        this.activities[i].GetDecimalValue(columnToCalculate),
                         ema,
                         smoothingWeight
                     )
                 );
 
-                ema = dataList[i].GetDecimalValue(columnToUpdate);
+                ema = this.activities[i].GetDecimalValue(columnToUpdate);
             }
         }
 
@@ -216,10 +204,10 @@ namespace StockTracker.Core.Calculations
         /// <returns>Returns -1 if there are no missing values, otherwise the first postion in the array where no value exists</returns>
         private int FindStartingPostion(int start,  string propertyToCheck)
         {
-            if (start == dataList.Count) return -1;  //EMA Has been calculated for all periods
+            if (start == this.activities.Count) return -1;  //EMA Has been calculated for all periods
 
             //This will give us the first row where there are no calculations.  We will resume from here.
-            if (dataList[start].GetDecimalValue(propertyToCheck) == 0) return start;
+            if (this.activities[start].GetDecimalValue(propertyToCheck) == 0) return start;
 
             //Keep Looking
             return FindStartingPostion(start + 1, propertyToCheck);
@@ -233,10 +221,10 @@ namespace StockTracker.Core.Calculations
         /// <returns>Returns -1 if there are no missing values, otherwise the first postion in the array where no value exists</returns>
         private int FindPostionWithValue(int start, string propertyToCheck)
         {
-            if (start == dataList.Count) return -1;  //EMA Has been calculated for all periods
+            if (start == this.activities.Count) return -1;  //EMA Has been calculated for all periods
 
             //This will give us the first row where there are no calculations.  We will resume from here.
-            if (dataList[start].GetDecimalValue(propertyToCheck) != 0) return start;
+            if (this.activities[start].GetDecimalValue(propertyToCheck) != 0) return start;
 
             //Keep Looking
             return FindStartingPostion(start + 1, propertyToCheck);

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace StockTracker.Core.Interfaces.Calculations
 {
-    public interface ICalculate<T> where T : IResponse
+    public interface IAverage
     {
 
-        public List<T> Calculate();
+        public decimal Calculate();
         
     }
 

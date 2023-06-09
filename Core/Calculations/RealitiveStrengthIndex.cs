@@ -86,12 +86,13 @@ namespace StockTracker.Core.Calculations
                     if (itemCount < 14) break; //Not enough data
 
                     //Since we don't have any previous data we start with a simple Average
-                    Averages averages = new (ConvertArrayForAvg());
+                    Averages averages = new (ConvertArrayForAvg(), 14,"Gain");
                     //Advance to the correct place in the array
                     //This is placing the average for the first 14 days in the 15 position
                     i = 14; 
-                    dataList[i].AvgGain = (decimal)Math.Round(averages.CalculateSimpleAverage(14, "Gain"),2);
-                    dataList[i].AvgLoss = (decimal)Math.Round(averages.CalculateSimpleAverage(14, "Loss"),2);
+                    dataList[i].AvgGain = (decimal)Math.Round(averages.Calculate(),2);
+                    averages = new (ConvertArrayForAvg(), 14, "Loss");
+                    dataList[i].AvgLoss = (decimal)Math.Round(averages.Calculate(),2);
 
                     continue;
                 }

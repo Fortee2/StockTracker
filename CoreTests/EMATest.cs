@@ -5,6 +5,7 @@ using StockTracker.Core.Calculations;
 using NUnit.Framework;
 using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
+using StockTracker.Core.Calculations.Response;
 
 namespace StockTracker.CoreTests
 {
@@ -37,7 +38,7 @@ namespace StockTracker.CoreTests
                 averages.NumberOfPeriods = 4;
                 averages.ColumnToAvg = "close";
 
-                List<IResponse> responses = averages.Calculate();
+                List<AverageResponse> responses = averages.Calculate();
 
                 Assert.AreEqual(6, responses.Count);
                 Assert.AreEqual(new DateTime(2021, 11, 19, 0, 0, 0), responses[0].ActivityDate);
@@ -60,7 +61,7 @@ namespace StockTracker.CoreTests
                 averages.ColumnPreviousEma = "PrevEMA";
                 averages.ColumnToAvg = "CalculateValue";
 
-                List<IResponse> responses = averages.Calculate();
+                List<AverageResponse> responses = averages.Calculate();
 
                 Assert.AreEqual(15, responses.Count);
                 Assert.AreEqual(new DateTime(2017, 12, 29, 0, 0, 0), responses[6].ActivityDate);

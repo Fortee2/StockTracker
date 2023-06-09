@@ -6,7 +6,7 @@ using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.Core.Calculations
 {
-    public class MovingAveraage:Averages
+    public class MovingAveraage:BaseCalculator, ICalculate<AverageResponse>
     {
         private ushort numberOfPeriods;
         private string columnToAvg;
@@ -30,9 +30,9 @@ namespace StockTracker.Core.Calculations
         /// <returns>An empty array if the array is smaller than the interval else it returns an array of
         /// AverageResponse objects
         /// </returns>
-        public override List<IResponse> Calculate()
+        public  List<AverageResponse> Calculate()
         {
-            List<IResponse> responses = new();
+            List<AverageResponse> responses = new();
 
             //Check to see if the array has enough data to calculate an average
             if (!ArrayValidforAverage(NumberOfPeriods, ColumnToAvg)) return responses;

@@ -6,7 +6,7 @@ using StockTracker.Core.Interfaces.Calculations;
 
 namespace StockTracker.Core.Calculations
 {
-    public class ExponetialMovingAverage:Averages { 
+    public class ExponetialMovingAverage:BaseCalculator, ICalculate<AverageResponse> { 
         private ushort _numberOfPeriods;
         private string _columnToAvg, columnPreviousEma;
         private int startPosition = 0, smoothingFactor = 2;
@@ -46,9 +46,9 @@ namespace StockTracker.Core.Calculations
         /// Calculates a weighted average giving more weight to current price movements
         /// </summary>
         /// <returns>A list of averages</returns>
-        public override List<IResponse> Calculate()
+        public  List<AverageResponse> Calculate()
         {
-            List<IResponse> responses = new();
+            List<AverageResponse> responses = new();
 
             int startPos = StartPosition;
             decimal smoothingWeight = CalculateSmoothingWeight(SmoothingFactor, _numberOfPeriods);
@@ -62,7 +62,8 @@ namespace StockTracker.Core.Calculations
 
                 //if no EMA exists calculate a simple average as start
                 //and place it into the prevEma variable for the next calculation
-                prevEma = CalculateSimpleAverage(_numberOfPeriods, _columnToAvg);
+                Averages simpleAverage = new(activities, _numberOfPeriods, _columnToAvg);
+                prevEma = simpleAverage.Calculate();
                 startPos = _numberOfPeriods; // Move index to correct position in the array   
             }
             else
@@ -100,9 +101,9 @@ namespace StockTracker.Core.Calculations
         /// <param name="lastEma">The weighted average from the previous calculation</param>
         /// <param name="smoothingWeight">A weight to be applied in the average calculation</param>
         /// <returns></returns>
-        private List<IResponse> CalculateEMA(int start, int end, string columnToAverage, decimal lastEma, decimal smoothingWeight)
+        private List<AverageResponse> CalculateEMA(int start, int end, string columnToAverage, decimal lastEma, decimal smoothingWeight)
         {
-            List<IResponse> responses = new();
+            List<AverageResponse> responses = new();
             decimal holdEma = lastEma;
 
             for(int i = start; i < end; i++) {

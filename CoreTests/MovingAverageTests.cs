@@ -47,7 +47,7 @@ namespace StockTracker.CoreTests
                 averages.ColumnToAvg = "close";
                 averages.NumberOfPeriods = 3;
 
-                List<IResponse> responses = averages.Calculate();
+                List<AverageResponse> responses = averages.Calculate();
 
                 Assert.AreEqual(7, responses.Count);
                 Assert.AreEqual(DateTime.Now.AddDays(2).Date, responses[0].ActivityDate);
@@ -70,7 +70,7 @@ namespace StockTracker.CoreTests
                 averages.ColumnToAvg = "close";
                 averages.NumberOfPeriods = 100;
 
-                List<IResponse> responses = averages.Calculate();
+                List<AverageResponse> responses = averages.Calculate();
 
                 Assert.AreEqual(0, responses.Count);
             }
@@ -82,8 +82,9 @@ namespace StockTracker.CoreTests
 
         [Test]
         public void CheckAverageCal()
-        { 
-            decimal response = averages.CalculateSimpleAverage(3, "open");
+        {
+            Averages averageCalc = new(stockHistory, 3, "open");
+            decimal response = averageCalc.Calculate();
 
             decimal avg = (decimal)Math.Round((stockHistory[0].GetDecimalValue("Open") + stockHistory[1].GetDecimalValue("Open") + stockHistory[2].GetDecimalValue("Open")) / 3, 2);
             Assert.AreEqual(avg, response);
@@ -92,7 +93,8 @@ namespace StockTracker.CoreTests
         [Test]
         public void CheckAverageWithOffset()
         {
-            decimal response = averages.CalculateSimpleAverage(3, "open", 2);
+            Averages averageCalc = new(stockHistory, 3, "open", 2);
+            decimal response = averageCalc.Calculate();
 
             decimal avg = (decimal)Math.Round((stockHistory[2].GetDecimalValue("Open") + stockHistory[3].GetDecimalValue("Open") + stockHistory[4].GetDecimalValue("Open")) / 3, 2);
             Assert.AreEqual(avg, response);

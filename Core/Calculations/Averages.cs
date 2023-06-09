@@ -3,31 +3,30 @@ using System.Collections.Generic;
 using StockTracker.Core.Calculations.Response;
 using StockTracker.Core.Interfaces;
 using StockTracker.Core.Interfaces.Calculations;
-using System.Linq;
+
 
 namespace StockTracker.Core.Calculations
 {
     /// <summary>
     /// Takes an array of Trading Structures and creates different types of averages from the data
     /// </summary>
-    public partial class Averages:ICalculate
+    public class Averages:BaseCalculator, IAverage
     {
-        protected readonly IList<ITradingStructure> activities;
+
+        private readonly ushort numberOfPeriods;
+        private readonly string columnToAvg;
+        private readonly int startPostion;
 
         /// <summary>
         /// Intialize Object
         /// </summary>
         /// <param name="collection">The data to average</param>
-        public Averages(IList<ITradingStructure> collection)
+        public Averages(IList<ITradingStructure> collection, ushort NumberofPeriods, string ColumnToAvg, int StartPostion = 0):base(collection)
         {
-            //Make sure the data is in the proper order;
-            this.activities = (from activity in collection
-                        orderby activity.ActivityDate ascending
-                        select activity).ToList();
-      
+            numberOfPeriods = NumberofPeriods;
+            columnToAvg = ColumnToAvg;
+            startPostion = StartPostion;
         }
-
-        
 
         /// <summary>
         /// Calculates an average for a set of numbers
@@ -36,7 +35,7 @@ namespace StockTracker.Core.Calculations
         /// <param name="columnToAvg">String that represents the name of the property to calculate the average from</param>
         /// <param name="startPostion">The postion in the array to start.  Needs to be 0 based. Defaults to 0</param>
         /// <returns>Returns the average</returns>
-        public decimal CalculateSimpleAverage(ushort numberOfPeriods, string columnToAvg, int startPostion = 0)
+        public decimal Calculate()
         {
             if (!ArrayValidforAverage(numberOfPeriods, columnToAvg)) return 0;
 
@@ -46,41 +45,8 @@ namespace StockTracker.Core.Calculations
             return (decimal)Math.Round(Sum(startPostion, adjustedEnd, columnToAvg) / numberOfPeriods, 2);
         }
 
-    
 
-        /// <summary>
-        /// Creates a sum of the values in a given range
-        /// </summary>
-        /// <param name="start">The index in the array to start adding</param>
-        /// <param name="stop">The index in the array to stop adding</param>
-        /// <param name="columnName">The property name of the object to add</param>
-        /// <returns>The sum of all the numbers in the give range</returns>
-        protected decimal Sum(int start, int stop, string columnName)
-        {
-            decimal currentValue = (decimal)activities[start].GetValue(columnName);
 
-            //We have hit the end of the list
-            if (start == stop) return currentValue;
-
-            //Add the current value to the next value in sequence
-            return currentValue + Sum(start + 1, stop, columnName);
-          
-        }
-
-        protected bool ArrayValidforAverage(int requiredNumberOfElements, string columnToAverage)
-        {
-            // Is the array too small?
-            if (activities.Count < requiredNumberOfElements || requiredNumberOfElements == 0) return false;
-            // Is the column name blank
-            if (String.IsNullOrEmpty(columnToAverage)) return false;
-
-            return true;
-        }
-
-        public virtual List<IResponse> Calculate()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
      

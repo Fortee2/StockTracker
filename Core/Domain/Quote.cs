@@ -19,6 +19,12 @@ namespace StockTracker.Core.Domain
             Volume = volume;
         }
 
+        public Quote( DateTime activityDate, decimal high, decimal low, decimal open, decimal close, int volume) 
+            :this(0, activityDate, high, low, open, close, volume)
+        {
+            
+        }
+
         //Properties
         public decimal High { get; set; }
         public decimal Low { get; set; }

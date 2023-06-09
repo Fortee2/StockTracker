@@ -88,7 +88,7 @@ namespace StockTracker.CoreTests
         {
             try
             {
-                List<IResponse> responses = averages.Calculate();
+                List<MacdResponse> responses = averages.Calculate();
 
                 MacdResponse macdResponse = (MacdResponse)responses[49];
 
