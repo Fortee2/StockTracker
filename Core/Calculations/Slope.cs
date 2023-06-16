@@ -9,18 +9,20 @@ namespace StockTracker.Core.Calculations
 
     public class Slope : BaseCalculator, ISlope
     {
-        public Slope(IList<SlopeData> collection) : base((IList<ITradingStructure>)collection)
+        public Slope(IList<SlopeData> collection) : base(collection.Cast<ITradingStructure>().ToList())
         {
 
         }
 
+    
         /// <summary>
         /// Calculate the slope of the line of best fit for the prices in the SlopeData objects
+        /// Data needs to be in ascending order by date for the calculation to be correct
         /// </summary>
         public decimal Calculate()
         {
             // Get the list of SlopeData objects
-            IList<SlopeData> slopeData = (IList<SlopeData>)this.activities;
+            IList<SlopeData> slopeData = this.activities.Cast<SlopeData>().ToList();
 
             // Calculate the mean (average) of the dates and the prices
             // We're converting the DateTime to ticks (a long representing 100-nanosecond intervals since 0001-01-01)
