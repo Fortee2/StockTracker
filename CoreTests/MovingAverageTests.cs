@@ -49,7 +49,7 @@ namespace StockTracker.CoreTests
 
                 List<AverageResponse> responses = averages.Calculate();
 
-                Assert.AreEqual(7, responses.Count);
+                Assert.AreEqual(8, responses.Count);
                 Assert.AreEqual(DateTime.Now.AddDays(2).Date, responses[0].ActivityDate);
 
                 decimal avg = (decimal) Math.Round( (stockHistory[0].GetDecimalValue("Close") + stockHistory[1].GetDecimalValue("Close") + stockHistory[2].GetDecimalValue("Close")) / 3,2);

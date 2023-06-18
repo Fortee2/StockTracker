@@ -3,6 +3,7 @@ using StockTracker.Core.Calculations.Response;
 using StockTracker.Core.Domain;
 using StockTracker.Core.Interfaces.Calculations;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StockTracker.Core.Calculations
 {
@@ -12,7 +13,9 @@ namespace StockTracker.Core.Calculations
         private IList<DirectionalMovementData>  _directionalMovementData;
 
         public DirectionalMovement(IList<DirectionalMovementData> directionalMovementData){
-            _directionalMovementData = directionalMovementData;
+            _directionalMovementData = (from dm in directionalMovementData
+                                       orderby dm.ActivityDate
+                                       select dm).ToList();
         }
 
         public List<DirectionalResponse> Calculate()
@@ -29,15 +32,25 @@ namespace StockTracker.Core.Calculations
 
         private DirectionalResponse CalculateDirectionalMovement(DirectionalMovementData directionalMovement)
         {
-            decimal HighMinusLow = directionalMovement.High - directionalMovement.Low;
-            decimal HighMinusPreviousHigh = Math.Abs(directionalMovement.High - directionalMovement.PreviousHigh);
-            decimal PreviousLowMinusLow = Math.Abs(directionalMovement.PreviousLow - directionalMovement.Low);
+            decimal HighMinusPreviousHigh = directionalMovement.High - directionalMovement.PreviousHigh;
+            decimal PreviousLowMinusLow = directionalMovement.PreviousLow - directionalMovement.Low;
 
-            decimal PositiveDirectionalMovement = HighMinusLow > HighMinusPreviousHigh ? HighMinusLow : HighMinusPreviousHigh;
-            decimal NegativeDirectionalMovement = HighMinusLow > PreviousLowMinusLow ? HighMinusLow : PreviousLowMinusLow;
+            decimal PositiveDirectionalMovement = 0M;
+            decimal NegativeDirectionalMovement = 0M;
+
+            if (HighMinusPreviousHigh > 0 && HighMinusPreviousHigh > PreviousLowMinusLow)
+            {
+                PositiveDirectionalMovement = HighMinusPreviousHigh;
+            }
+
+            if (PreviousLowMinusLow > 0 && PreviousLowMinusLow > HighMinusPreviousHigh)
+            {
+                NegativeDirectionalMovement = PreviousLowMinusLow;
+            }
 
             return new DirectionalResponse(directionalMovement.ActivityDate, PositiveDirectionalMovement, NegativeDirectionalMovement);
         }
+
     }
 
 }

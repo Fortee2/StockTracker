@@ -15,7 +15,7 @@ namespace StockTracker.Core.UnitTests.Calculations
             // Arrange
             var directionalMovementData = new List<DirectionalMovementData>
             {
-                new DirectionalMovementData( DateTime.Now.Date, 100m,  50m,  90m, 40m),
+                new DirectionalMovementData( DateTime.Now.Date, 100m,  50m,  90m, 70m),
                 new DirectionalMovementData( DateTime.Now.Date.AddDays(-1), 110m, 60m, 100m, 50m)
             };
             var sut = new DirectionalMovement(directionalMovementData);
@@ -25,11 +25,11 @@ namespace StockTracker.Core.UnitTests.Calculations
 
             // Assert
             Assert.AreEqual(result[0].ActivityDate, DateTime.Now.Date.AddDays(-1));
-            Assert.AreEqual(result[0].PositiveDirectionalMovement, 60);
-            Assert.AreEqual(result[0].NegativeDirectionalMovement, 10);
+            Assert.AreEqual(result[0].PositiveDirectionalMovement, 10);
+            Assert.AreEqual(result[0].NegativeDirectionalMovement, 0);
             Assert.AreEqual(result[1].ActivityDate, DateTime.Now.Date);
-            Assert.AreEqual(result[1].PositiveDirectionalMovement, 50);
-            Assert.AreEqual(result[1].NegativeDirectionalMovement, 10);
+            Assert.AreEqual(result[1].PositiveDirectionalMovement, 0);
+            Assert.AreEqual(result[1].NegativeDirectionalMovement, 20);
         }
 
     }
