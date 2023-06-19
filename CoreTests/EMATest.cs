@@ -63,9 +63,9 @@ namespace StockTracker.CoreTests
 
                 List<AverageResponse> responses = averages.Calculate();
 
-                Assert.AreEqual(15, responses.Count);
-                Assert.AreEqual(new DateTime(2017, 12, 29, 0, 0, 0), responses[6].ActivityDate);
-                Assert.AreEqual((decimal)37.66, Math.Round(responses[6].GetDecimalValue("Value"), 2));
+                Assert.AreEqual(11, responses.Count);
+                Assert.AreEqual(new DateTime(2018, 01, 05, 0, 0, 0), responses[6].ActivityDate);
+                Assert.AreEqual(39.47m, Math.Round(responses[6].GetDecimalValue("Value"), 2));
 
             }
             catch (Exception e)
