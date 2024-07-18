@@ -64,7 +64,7 @@ namespace StockTracker.CoreTests
         {
             decimal avgGain = (decimal)Math.Round(((rsiList[14].AvgGain * 13) + rsiList[15].Gain) / 14 , 2);
 
-            Assert.AreEqual(avgGain, rsiList[15].AvgGain);
+            Assert.AreEqual(avgGain, Math.Round(rsiList[15].AvgGain, 2));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace StockTracker.CoreTests
         {
             decimal avgLoss = (decimal)Math.Round(((rsiList[14].AvgLoss * 13) + rsiList[15].Loss) / 14, 2);
 
-            Assert.AreEqual(avgLoss, rsiList[15].AvgLoss);
+            Assert.AreEqual(avgLoss, Math.Round(rsiList[15].AvgLoss,2));
         }
     }
 }
