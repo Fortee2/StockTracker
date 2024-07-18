@@ -14,10 +14,11 @@ namespace StockTracker.Core.Calculations
 
         }
 
-    
+
         /// <summary>
         /// Calculate the slope of the line of best fit for the prices in the SlopeData objects
         /// Data needs to be in ascending order by date for the calculation to be correct
+        /// slope = Σ[(xi - x_mean) * (yi - y_mean)] / Σ[(xi - x_mean) ^ 2]
         /// </summary>
         public decimal Calculate()
         {

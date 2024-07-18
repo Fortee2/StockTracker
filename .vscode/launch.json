@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/CoreTests/bin/Debug/net6.0/StockTracker.Core.Tests.dll",
+            "program": "${workspaceFolder}/CoreTests/bin/Debug/net8.0/StockTracker.Core.Tests.dll",
             "args": [],
             "cwd": "${workspaceFolder}/CoreTests",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

@@ -14,7 +14,7 @@ namespace StockTracker.Core.Analyzers
 		private Decimal[] valuesArray;
 		private Decimal factor = 0.05M;
 
-        public List<ITradingStructure> SeccurityActivity {
+        public List<ITradingStructure> SecurityActivity {
             get
             {
 				return activities;

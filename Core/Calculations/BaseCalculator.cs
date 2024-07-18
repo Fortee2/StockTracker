@@ -22,12 +22,13 @@ namespace StockTracker.Core.Calculations
             // Initialize the calculator
         }
 
-        protected bool ArrayValidforAverage(int requiredNumberOfElements, string columnToAverage)
+        protected virtual bool ArrayValidforAverage(int requiredNumberOfElements, string columnToAverage)
         {
-            // Is the array too small?
-            if (activities.Count < requiredNumberOfElements || requiredNumberOfElements == 0) return false;
             // Is the column name blank
             if (String.IsNullOrEmpty(columnToAverage)) return false;
+
+            // Is the array too small?
+            if (activities.Count < requiredNumberOfElements || requiredNumberOfElements == 0) return false;
 
             return true;
         }

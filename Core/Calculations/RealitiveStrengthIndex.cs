@@ -1,136 +1,63 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using StockTracker.Core.Domain;
-using StockTracker.Core.Interfaces;
 
 namespace StockTracker.Core.Calculations
 {
-    public class RealitiveStrengthIndex
+    public class RelativeStrengthIndex
     {
         protected readonly IList<RelativeStrength> dataList;
+        private const int Periods = 14; // Standard period for RSI calculation
 
-        /// <summary>
-        /// Creates an instatnce of the RSI caluclation library
-        /// </summary>
-        /// <param name="rsiData">
-        /// A list of RSI objects to update.  If
-        /// no previous RSI data exists this object should have just its
-        /// activity date and close price populated.
-        /// </param>
-        public RealitiveStrengthIndex(IList rsiData)
+        public RelativeStrengthIndex(IList<RelativeStrength> rsiData)
         {
-            dataList = (IList<RelativeStrength>) rsiData;
+            dataList = rsiData;
         }
 
-        /// <summary>
-        /// Calculate RSI based on the data provided in the list
-        /// </summary>
         public void Calculate()
         {
-            int itemCount = dataList.Count;
+            if (dataList.Count < Periods) return; // Ensure enough data
 
-            //Not enough data
-            if (itemCount < 1) return;
-
-            CalculateGainLoss();
-            CalculateIndex();
+            CalculateInitialAverages();
+            CalculateSubsequentValues();
         }
 
-        /// <summary>
-        /// Updates the RSI list with the difference between the current periods
-        /// close and the previous periods close
-        /// </summary>
-        private void CalculateGainLoss()
+        private void CalculateInitialAverages()
         {
-            int itemCount = dataList.Count;
-
-            for (int i = 1; i < itemCount; i++)
+            decimal totalGain = 0, totalLoss = 0;
+            for (int i = 1; i <= Periods; i++)
             {
-                RelativeStrength rSI = dataList[i];
+                var change = dataList[i].Close - dataList[i - 1].Close;
+                if (change > 0) totalGain += change;
+                else totalLoss -= change; // Losses are positive numbers
+            }
 
-                //If both are zero the entry has never been set or trading was
-                //flata
-                if (rSI.Gain == 0 && rSI.Loss == 0)
+            dataList[Periods - 1].AvgGain = totalGain / Periods;
+            dataList[Periods - 1].AvgLoss = totalLoss / Periods;
+        }
+
+        private void CalculateSubsequentValues()
+        {
+            for (int i = Periods; i < dataList.Count; i++)
+            {
+                var change = dataList[i].Close - dataList[i - 1].Close;
+                var gain = change > 0 ? change : 0;
+                var loss = change < 0 ? -change : 0;
+
+                // Apply smoothing formula
+                dataList[i].AvgGain = (dataList[i - 1].AvgGain * (Periods - 1) + gain) / Periods;
+                dataList[i].AvgLoss = (dataList[i - 1].AvgLoss * (Periods - 1) + loss) / Periods;
+
+                if (dataList[i].AvgLoss == 0)
                 {
-                    decimal gl = (decimal)Math.Round(rSI.Close - dataList[i - 1].Close, 2);
-
-                    //Negative number signals loss
-                    if (gl < 0)
-                    {
-                        rSI.Loss = Math.Abs(gl);
-                        continue;
-                    }
-
-                    //We don't want to record items where the difference is 0
-                    //So we test again
-                    if (gl > 0)
-                    {
-                        rSI.Gain = gl;
-                    }
+                    dataList[i].RSIndex = 100; // If no losses, RSI is 100
+                }
+                else
+                {
+                    var rs = dataList[i].AvgGain / dataList[i].AvgLoss;
+                    dataList[i].RSIndex = 100 - (100 / (1 + rs));
                 }
             }
-        }
-
-        private void CalculateIndex()
-        {
-            int itemCount = dataList.Count;
-
-            for (int i = 0; i < itemCount; i++)
-            {
-                RelativeStrength rSI = dataList[i];
-
-                //never been calculated before
-                if(i == 0 && rSI.AvgGain == 0 && rSI.AvgLoss == 0)
-                {
-                    if (itemCount < 14) break; //Not enough data
-
-                    //Since we don't have any previous data we start with a simple Average
-                    Averages averages = new (ConvertArrayForAvg(), 14,"Gain");
-                    //Advance to the correct place in the array
-                    //This is placing the average for the first 14 days in the 15 position
-                    i = 14; 
-                    dataList[i].AvgGain = (decimal)Math.Round(averages.Calculate(),2);
-                    averages = new (ConvertArrayForAvg(), 14, "Loss");
-                    dataList[i].AvgLoss = (decimal)Math.Round(averages.Calculate(),2);
-
-                    continue;
-                }
-
-                dataList[i].AvgGain = CalulateWeightedAverage("AvgGain", "Gain", i);
-                dataList[i].AvgLoss = CalulateWeightedAverage("AvgLoss", "Loss", i);
-
-                dataList[i].RSIndex = CalculateRsi(i);
-            }
-        }
-
-        private decimal CalulateWeightedAverage(string AvgColumnName, string ColumnName, int postion)
-        {
-            return (decimal)Math.Round((((dataList[postion - 1].GetDecimalValue(AvgColumnName) * 13) + dataList[postion].GetDecimalValue(ColumnName)) / 14),2);
-        }
-
-        private decimal CalculateRsi(int idx)
-        {
-            decimal rs = dataList[idx].AvgGain / dataList[idx].AvgLoss;
-
-            //Convert Relative Strength into a number between 0 and 100
-            return (decimal) Math.Round(100 - (100 / (rs + 1)), 0);
-        }
-
-        private List<ITradingStructure> ConvertArrayForAvg()
-        {
-            List<ITradingStructure> tradingStructures = new(14);
-            short counter = 0;
-
-            foreach(RelativeStrength rSI in dataList)
-            {
-                if (counter == 14) break;
-
-                tradingStructures.Add(rSI);
-                counter++;
-            }
-
-            return tradingStructures;
         }
     }
 }

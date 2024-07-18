@@ -93,6 +93,14 @@ namespace StockTracker.Core.Calculations
             return responses;
         }
 
+        protected override bool ArrayValidforAverage(int requiredNumberOfElements, string columnToAverage)
+        {
+            //Array preloaded with data
+            if (activities[0].GetDecimalValue(EMA12Column) > 0 && activities[0].GetDecimalValue(EMA26Column) > 0) return true;
+
+            return base.ArrayValidforAverage(requiredNumberOfElements, columnToAverage);
+        }
+
         /// <summary>
         /// Calculates missing values for 12, 26 EMAs
         /// </summary>

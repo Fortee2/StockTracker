@@ -10,7 +10,7 @@ namespace StockTracker.CoreTests
     public class RSITests
     {
         private IList<RelativeStrength> rsiList;
-        private RealitiveStrengthIndex strengthIndex;
+        private RelativeStrengthIndex strengthIndex;
 
         public RSITests()
         {
@@ -34,7 +34,7 @@ namespace StockTracker.CoreTests
                 );
             }
 
-            strengthIndex = new RealitiveStrengthIndex((IList)rsiList);
+            strengthIndex = new RelativeStrengthIndex(rsiList);
             strengthIndex.Calculate();
         }
 
